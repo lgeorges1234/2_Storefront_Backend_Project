@@ -22,7 +22,7 @@ if (ENV === 'test') {
     database: POSTGRES_DB,
     user: POSTGRES_USER,
     password: POSTGRES_PASSWORD,
-    port: 3000,
+    port: 5000,
   });
 }
 
@@ -32,7 +32,7 @@ if (ENV === 'dev') {
     database: POSTGRES_TEST_DB,
     user: POSTGRES_USER,
     password: POSTGRES_PASSWORD,
-    port: 3000,
+    port: 5000,
   });
 }
 
