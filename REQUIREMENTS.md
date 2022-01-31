@@ -5,20 +5,20 @@ These are the notes from a meeting with the frontend developer that describe wha
 
 ## API Endpoints
 #### Products
-- Index 
-- Show
-- Create [token required]
-- [OPTIONAL] Top 5 most popular products 
-- [OPTIONAL] Products by category (args: product category)
+- Index : GET   '/products'
+- Show : GET    '/products/{:id}'
+- Create [token required] :     POST '/products'
+- [OPTIONAL] Top 5 most popular products :  GET '/five_most-wanted'
+- [OPTIONAL] Products by category (args: product category)  GET '/products_by_category'
 
 #### Users
-- Index [token required]
-- Show [token required]
-- Create N[token required]
+- Index [token required]    GET '/users'
+- Show [token required]     GET '/users/{:id}
+- Create N[token required]  POST '/users
 
 #### Orders
-- Current Order by user (args: user id)[token required]
-- [OPTIONAL] Completed Orders by user (args: user id)[token required]
+- Current Order by user (args: user id)[token required] GET '/current_orders_per_user'
+- [OPTIONAL] Completed Orders by user (args: user id)[token required]   GET '/completed_order_per_user'
 
 ## Data Shapes
 #### Product
@@ -27,11 +27,26 @@ These are the notes from a meeting with the frontend developer that describe wha
 - price
 - [OPTIONAL] category
 
+CREATE TABLE products(
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(64) NOT NULL,
+    price integer NOT NULL,
+    category VARCHAR(100)
+);
+
 #### User
 - id
 - firstName
 - lastName
 - password
+
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    firstname VARCHAR(100) NOT NULL,
+    lastname VARCHAR(100) NOT NULL,
+    password_digest VARCHAR NOT NULL
+);
+
 
 #### Orders
 - id
@@ -40,3 +55,17 @@ These are the notes from a meeting with the frontend developer that describe wha
 - user_id
 - status of order (active or complete)
 
+CREATE TABLE orders (
+    id SERIAL PRIMARY KEY,
+    status VARCHAR(15) NOT NULL,
+    user_id bigint REFERENCES users(id)
+);
+
+CREATE TABLE order_products(
+    id SERIAL PRIMARY KEY,
+    quantity integer NOT NULL,
+    order_id bigint REFERENCES orders(id),
+    product_id bigint REFERENCES products(id)
+);
+
+net stop postgresql-x64-13

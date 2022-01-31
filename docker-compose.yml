@@ -1,14 +1,15 @@
-version: '3.9'
+version: '3.9'   
 
 services:
   postgres:
-    image: postgres
+    image: moschopsd20/local-postgres-workspace
+    container_name: local-postgres
     ports:
-      - '5432:5432'
+      - '5000:5432'
     env_file:
       - .env
     volumes:
       - 'postgres:/var/lib/postgresql/data'
 
 volumes:
-  postgres:
+    postgres:
