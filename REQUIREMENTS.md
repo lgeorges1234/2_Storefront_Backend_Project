@@ -34,6 +34,13 @@ CREATE TABLE products(
     category VARCHAR(100)
 );
 
+export type Product = {
+    id?: Number,
+    name: String,
+    price: Number,
+    category?: String
+}
+
 #### User
 - id
 - firstName
@@ -47,6 +54,12 @@ CREATE TABLE users (
     password_digest VARCHAR NOT NULL
 );
 
+export type Order = {
+    id?: Number,
+    firstname: String,
+    lastname: String,
+    password: Number
+}
 
 #### Orders
 - id
@@ -61,6 +74,11 @@ CREATE TABLE orders (
     user_id bigint REFERENCES users(id)
 );
 
+export type Order = {
+    id?: Number,
+    status: String,
+}
+
 CREATE TABLE order_products(
     id SERIAL PRIMARY KEY,
     quantity integer NOT NULL,
@@ -69,3 +87,6 @@ CREATE TABLE order_products(
 );
 
 net stop postgresql-x64-13
+
+
+yarn add jasmine-spec-reporter@7.0.0
