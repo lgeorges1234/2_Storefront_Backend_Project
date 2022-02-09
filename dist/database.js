@@ -2,30 +2,31 @@
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-exports.__esModule = true;
-var dotenv_1 = __importDefault(require("dotenv"));
-var pg_1 = require("pg");
-dotenv_1["default"].config();
-var _a = process.env, POSTGRES_HOST = _a.POSTGRES_HOST, POSTGRES_DB = _a.POSTGRES_DB, POSTGRES_USER = _a.POSTGRES_USER, POSTGRES_PASSWORD = _a.POSTGRES_PASSWORD, POSTGRES_TEST_DB = _a.POSTGRES_TEST_DB, ENV = _a.ENV;
+Object.defineProperty(exports, "__esModule", { value: true });
+const dotenv_1 = __importDefault(require("dotenv"));
+const pg_1 = require("pg");
+dotenv_1.default.config();
+const { POSTGRES_HOST_DEV, POSTGRES_DB_DEV, POSTGRES_USER_DEV, POSTGRES_PASSWORD_DEV, PORT_DEV, POSTGRES_HOST_TEST, POSTGRES_DB_TEST, POSTGRES_USER_TEST, POSTGRES_PASSWORD_TEST, PORT_TEST, ENV, } = process.env;
 // eslint-disable-next-line import/no-mutable-exports
-var client = new pg_1.Pool();
-console.log(ENV);
+let client = new pg_1.Pool();
+console.log(`ENV var: ${ENV}`);
 if (ENV === 'test') {
     client = new pg_1.Pool({
-        host: POSTGRES_HOST,
-        database: POSTGRES_DB,
-        user: POSTGRES_USER,
-        password: POSTGRES_PASSWORD,
-        port: 5000
+        host: POSTGRES_HOST_TEST,
+        database: POSTGRES_DB_TEST,
+        user: POSTGRES_USER_TEST,
+        password: POSTGRES_PASSWORD_TEST,
+        port: PORT_DEV,
     });
+    console.log(JSON.stringify(client));
 }
 if (ENV === 'dev') {
     client = new pg_1.Pool({
-        host: POSTGRES_HOST,
-        database: POSTGRES_TEST_DB,
-        user: POSTGRES_USER,
-        password: POSTGRES_PASSWORD,
-        port: 5000
+        host: POSTGRES_HOST_DEV,
+        database: POSTGRES_DB_DEV,
+        user: POSTGRES_USER_DEV,
+        password: POSTGRES_PASSWORD_DEV,
+        port: PORT_TEST,
     });
 }
-exports["default"] = client;
+exports.default = client;

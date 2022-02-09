@@ -13,10 +13,12 @@ app.get('/', (_req: express.Request, res: express.Response) => {
   res.send('Hello World!');
 });
 
-app.use(ordersRoutes);
-app.use(productsRoutes);
-app.use(usersRoutes);
+ordersRoutes(app);
+productsRoutes(app);
+usersRoutes(app);
 
 app.listen(3000, () => {
   console.log(`starting app on: ${address}`);
 });
+
+export default app;

@@ -42,10 +42,15 @@ export class UserStore {
       const sql =
         'INSERT INTO users (firstname, lastname, password_digest) VALUES($1, $2, $3) RETURNING *';
       const conn = await client.connect();
+      const hash = bcrypt.hashSync(
+        user.password_digest + pepper,
+        parseInt(saltRounds as string, 10)
+      );
+
       const result = await conn.query(sql, [
         user.firstname,
         user.lastname,
-        user.password_digest,
+        hash,
       ]);
       conn.release();
       return result.rows[0];
@@ -54,16 +59,23 @@ export class UserStore {
     }
   }
 
-  async authenticate(lastname: string): Promise<User> {
-    try {
-      const sql = 'SELECT * FROM users WHERE lastname=($1)';
-      const conn = await client.connect();
-      const result = await conn.query(sql, [lastname]);
-      conn.release();
-      return result.rows[0];
-    } catch (error) {
-      throw new Error(`User ${lastname} does not exist. Error: ${error}`);
+  async authenticate(user: User): Promise<User> {
+    const sql = 'SELECT * FROM users WHERE lastname=($1)';
+    const conn = await client.connect();
+    const result = await conn.query(sql, [user.lastname]);
+    conn.release();
+    if (result.rows.length) {
+      if (
+        bcrypt.compareSync(
+          user.password_digest + pepper,
+          result.rows[0].password_digest
+        )
+      ) {
+        return result.rows[0];
+      }
+      throw new Error(`Authentication of  ${user.lastname} has not succeed.`);
     }
+    throw new Error(`User ${user.lastname} does not exist.`);
   }
 
   async delete(id: string): Promise<User> {

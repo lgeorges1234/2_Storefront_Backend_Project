@@ -10,17 +10,15 @@ const index = async (_req: Request, res: Response) => {
 };
 
 const show = async (req: Request, res: Response) => {
-  console.log(req.params);
   const result = await store.show(req.params.id);
   res.json(result);
 };
 
 const create = async (req: Request, res: Response) => {
-  console.log(req.body);
   const user: User = {
     firstname: req.body.firstname,
     lastname: req.body.lastname,
-    password_digest: req.body.password,
+    password_digest: req.body.password_digest,
   };
   try {
     const newUser = await store.create(user);
@@ -36,7 +34,6 @@ const create = async (req: Request, res: Response) => {
 };
 
 const destroy = async (req: Request, res: Response) => {
-  console.log(req.params);
   const result = await store.delete(req.params.id);
   res.json(result);
 };
@@ -45,15 +42,51 @@ const authenticate = async (req: Request, res: Response) => {
   const user: User = {
     firstname: req.body.firstname,
     lastname: req.body.lastname,
-    password_digest: req.body.password,
+    password_digest: req.body.password_digest,
   };
   try {
-    const authenticateUser = await store.authenticate(user.lastname as string);
+    const authenticateUser = await store.authenticate(user);
     const token = jwt.sign(
       { user: authenticateUser },
       process.env.TOKEN_SECRET as Secret
     );
     res.json(token);
+  } catch (error) {
+    res.status(401);
+    res.json({ error });
+  }
+};
+
+export const verifyUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    if (req.body.firstname && req.body.lastname && req.body.password_digest) {
+      next();
+    } else {
+      throw new Error();
+    }
+  } catch (error) {
+    res.status(401);
+    res.json({ error });
+  }
+};
+
+const verifyId = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const results = await store.index();
+    const existingId = results.filter(
+      (result) =>
+        (result.id as unknown as number) ===
+        parseInt(req.params.id as unknown as string, 10)
+    );
+    if (existingId.length) {
+      next();
+    } else {
+      throw new Error();
+    }
   } catch (error) {
     res.status(401);
     res.json({ error });
@@ -72,15 +105,16 @@ export const verifyAuthToken = (
     next();
   } catch (error) {
     res.status(401);
+    res.json({ error });
   }
 };
 
 const usersRoutes = (app: express.Application) => {
-  app.get('/users', index);
-  app.get('/users/:id', show);
-  app.post('/users', create);
-  app.delete('/users/:id', destroy);
-  app.post('/users/authenticate', authenticate);
+  app.get('/users', verifyAuthToken, index);
+  app.get('/users/:id', verifyAuthToken, verifyId, show);
+  app.post('/users', verifyUser, create);
+  app.delete('/users/:id', verifyAuthToken, verifyId, destroy);
+  app.post('/users/authenticate', verifyUser, authenticate);
 };
 
 export default usersRoutes;
