@@ -13,9 +13,9 @@ export class ProductStore {
     try {
       const sql = 'SELECT * FROM products';
       const conn = await client.connect();
-      const result = await conn.query(sql);
+      const indexResult = await conn.query(sql);
       conn.release();
-      return result.rows;
+      return indexResult.rows;
     } catch (error) {
       throw new Error(`Could not get products. Error: ${error}`);
     }
@@ -25,9 +25,9 @@ export class ProductStore {
     try {
       const sql = 'SELECT * FROM products WHERE id=($1)';
       const conn = await client.connect();
-      const result = await conn.query(sql, [id]);
+      const showResult = await conn.query(sql, [id]);
       conn.release();
-      return result.rows[0];
+      return showResult.rows[0];
     } catch (error) {
       throw new Error(`Could not get product ${id}. Error: ${error}`);
     }
@@ -38,13 +38,13 @@ export class ProductStore {
       const sql =
         'INSERT INTO products (name, price, category) VALUES($1, $2, $3) RETURNING *';
       const conn = await client.connect();
-      const result = await conn.query(sql, [
+      const createResult = await conn.query(sql, [
         product.name,
         product.price,
         product.category,
       ]);
       conn.release();
-      return result.rows[0];
+      return createResult.rows[0];
     } catch (error) {
       throw new Error(
         `Could not add new product ${product.name}.Error: ${error}`
@@ -56,9 +56,9 @@ export class ProductStore {
     try {
       const conn = await client.connect();
       const sql = 'DELETE FROM products WHERE id=($1)';
-      const result = await conn.query(sql, [id]);
+      const deleteResult = await conn.query(sql, [id]);
       conn.release();
-      return result.rows[0];
+      return deleteResult.rows[0];
     } catch (error) {
       throw new Error(`Could not delete product ${id}. Error: ${error}`);
     }

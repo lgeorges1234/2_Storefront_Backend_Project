@@ -2,17 +2,20 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import supertest from 'supertest';
 import { Product } from '../../models/products';
+import { User } from '../../models/users';
 import app from '../../server';
 
 const request = supertest(app);
 
 let product: Product;
 let noProduct: Object;
+let user: User;
+let token: String;
 
 let createResponse: supertest.Response;
 
 describe('productsRoutes', () => {
-  beforeAll(() => {
+  beforeAll(async () => {
     product = {
       name: 'Twingo',
       price: 12000,
@@ -23,16 +26,47 @@ describe('productsRoutes', () => {
       price: 12000,
       category: 'car',
     };
+    user = {
+      firstname: 'Jean-Claude',
+      lastname: 'Van Damme',
+      password_digest: 'kickboxer',
+    };
+    const createUserResponse = await request
+      .post('/users')
+      .send(user)
+      .set('Accept', 'application/json');
+    token = createUserResponse.body;
+  });
+  afterAll(async () => {
+    const indexUserResponse = await request.get('/users').set({
+      Authorization: `bearer ${token}`,
+      'Content-Type': 'application/json',
+    });
+    await request.delete(`/users/${indexUserResponse.body[0].id}`).set({
+      Authorization: `bearer ${token}`,
+      'Content-Type': 'application/json',
+    });
   });
   describe('CREATE POST /products', () => {
+    it('wrong product settings should return an error', async () => {
+      const createErrorResponse = await request
+        .post('/products')
+        .send(noProduct)
+        .set({
+          Authorization: `bearer ${token}`,
+          'Content-Type': 'application/json',
+        });
+      expect(createErrorResponse.status).toBe(401);
+      expect(createErrorResponse.error).toBeTruthy;
+    });
     it('correct product settings should return a new created product', async () => {
       createResponse = await request
         .post('/products')
         .send(product)
-        .set('Accept', 'application/json');
-      // .set('Authorization', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.t-IDcSemACt8x4iTMCda8Yhe3iZaWbvV5XKSTbuAn0M')
-      // .auth('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiV2F0ZXIgQm90dGxlIiwicHJpY2UiOiIyLjk5In0.Flq3cKKZoTs8hWcAaTqJbvcAaJpb3FVi2IXU7rCzvvU', { type: 'bearer' })
-
+        .set({
+          Authorization: `bearer ${token}`,
+          'Content-Type': 'application/json',
+        });
       expect(createResponse.status).toBe(200);
       expect(createResponse.body).toEqual({
         id: createResponse.body.id,
@@ -41,13 +75,11 @@ describe('productsRoutes', () => {
         category: product.category,
       });
     });
-    it('wrong product settings should return an error', async () => {
+    it('correct product settings with no jwt token should return an error', async () => {
       const createErrorResponse = await request
         .post('/products')
-        .send(noProduct)
+        .send(product)
         .set('Accept', 'application/json');
-      // .set('Authorization', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.t-IDcSemACt8x4iTMCda8Yhe3iZaWbvV5XKSTbuAn0M')
-      // .auth('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiV2F0ZXIgQm90dGxlIiwicHJpY2UiOiIyLjk5In0.Flq3cKKZoTs8hWcAaTqJbvcAaJpb3FVi2IXU7rCzvvU', { type: 'bearer' })
       expect(createErrorResponse.status).toBe(401);
       expect(createErrorResponse.error).toBeTruthy;
     });
@@ -58,8 +90,6 @@ describe('productsRoutes', () => {
       const indexResponse = await request
         .get('/products')
         .set('Accept', 'application/json');
-      // .set('Authorization', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.t-IDcSemACt8x4iTMCda8Yhe3iZaWbvV5XKSTbuAn0M')
-      // .auth('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiV2F0ZXIgQm90dGxlIiwicHJpY2UiOiIyLjk5In0.Flq3cKKZoTs8hWcAaTqJbvcAaJpb3FVi2IXU7rCzvvU', { type: 'bearer' })
       expect(indexResponse.status).toBe(200);
       expect(indexResponse.body).toEqual([
         {
@@ -74,9 +104,9 @@ describe('productsRoutes', () => {
 
   describe('SHOW GET /products/{id}', () => {
     it('wrong product id number should return an error', async () => {
-      const showResponse = await request.get(`/products/56`);
-      expect(showResponse.status).toBe(401);
-      expect(showResponse.error).toBeTruthy;
+      const showErrorResponse = await request.get(`/products/56`);
+      expect(showErrorResponse.status).toBe(401);
+      expect(showErrorResponse.error).toBeTruthy;
     });
     it('correct product id number should return the product', async () => {
       const showResponse = await request.get(
@@ -94,20 +124,20 @@ describe('productsRoutes', () => {
 
   describe('Delete DELETE /products/{id}', () => {
     it('wrong product id number should return an error', async () => {
-      const deleteResponse = await request.delete(`/products/56`);
-      expect(deleteResponse.status).toBe(401);
-      expect(deleteResponse.error).toBeTruthy;
+      const deleteErrorResponse = await request.delete(`/products/56`);
+      expect(deleteErrorResponse.status).toBe(401);
+      expect(deleteErrorResponse.error).toBeTruthy;
     });
     it('correct product id number should delete the product', async () => {
-      const deleteResponse = await request.delete(
-        `/products/${createResponse.body.id}`
-      );
+      const deleteResponse = await request
+        .delete(`/products/${createResponse.body.id}`)
+        .set({
+          Authorization: `bearer ${token}`,
+          'Content-Type': 'application/json',
+        });
       const indexResponse = await request
         .get('/products')
         .set('Accept', 'application/json');
-      // .set('Authorization', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.t-IDcSemACt8x4iTMCda8Yhe3iZaWbvV5XKSTbuAn0M')
-      // .auth('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiV2F0ZXIgQm90dGxlIiwicHJpY2UiOiIyLjk5In0.Flq3cKKZoTs8hWcAaTqJbvcAaJpb3FVi2IXU7rCzvvU', { type: 'bearer' })
-
       expect(deleteResponse.status).toBe(200);
       expect(indexResponse.body).toEqual([]);
     });

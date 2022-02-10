@@ -32,8 +32,14 @@ const create = async (req, res) => {
     }
 };
 const destroy = async (req, res) => {
-    const result = await store.delete(req.params.id);
-    res.json(result);
+    try {
+        const result = await store.delete(req.params.id);
+        res.json(result);
+    }
+    catch (error) {
+        res.status(400);
+        res.json(`${error}`);
+    }
 };
 const authenticate = async (req, res) => {
     const user = {
@@ -88,6 +94,7 @@ const verifyAuthToken = (req, res, next) => {
         const authorizationHeader = req.headers.authorization;
         const token = authorizationHeader.split(' ')[1];
         jsonwebtoken_1.default.verify(token, process.env.TOKEN_SECRET);
+        console.log(`token verified`);
         next();
     }
     catch (error) {
