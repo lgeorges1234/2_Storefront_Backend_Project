@@ -64,10 +64,25 @@ class OrderStore {
                 orderProducts.order_id,
                 orderProducts.product_id,
             ]);
+            conn.release();
             return result.rows[0];
         }
         catch (error) {
             throw new Error(`Could not add product ${orderProducts.product_id} to order ${orderProducts.order_id}: Error ${error}`);
+        }
+    }
+    async indexProduct() {
+        try {
+            const conn = await database_1.default.connect();
+            const sql = 'SELECT * FROM order_products';
+            const result = await conn.query(sql);
+            conn.release();
+            console.log(`indexProduct return :`);
+            console.log(result.rows);
+            return result.rows;
+        }
+        catch (error) {
+            throw new Error(`Could not get products from order_products: Error ${error}`);
         }
     }
     async editProduct(orderId) {
@@ -75,6 +90,9 @@ class OrderStore {
             const conn = await database_1.default.connect();
             const sql = 'SELECT * FROM order_products WHERE order_id=($1)';
             const result = await conn.query(sql, [orderId]);
+            conn.release();
+            console.log(`editProduct return :`);
+            console.log(result.rows);
             return result.rows;
         }
         catch (error) {
@@ -84,14 +102,13 @@ class OrderStore {
     async updateProduct(orderProducts) {
         try {
             const conn = await database_1.default.connect();
-            console.log(JSON.stringify(orderProducts));
             const sql = 'UPDATE order_products SET quantity=($1) WHERE order_id=($2) AND product_id=($3) RETURNING *';
             const result = await conn.query(sql, [
                 orderProducts.quantity,
                 orderProducts.order_id,
                 orderProducts.product_id,
             ]);
-            console.log(JSON.stringify(result.rows));
+            conn.release();
             return result.rows[0];
         }
         catch (error) {
@@ -103,6 +120,9 @@ class OrderStore {
             const conn = await database_1.default.connect();
             const sql = 'DELETE FROM order_products WHERE order_id=($1) AND product_id=($2) RETURNING *';
             const result = await conn.query(sql, [orderId, productId]);
+            conn.release();
+            console.log(`removeProduct return :`);
+            console.log(result.rows[0]);
             return result.rows[0];
         }
         catch (error) {

@@ -4,12 +4,12 @@ import client from '../database';
 
 export class DasboardQueris {
   async fiveMostWanted(): Promise<
-    { name: string; price: number; orderId: string }[]
+    { name: string; price: number; category: string; quantity: number }[]
   > {
     try {
       const conn = await client.connect();
       const sql =
-        'SELECT name, price, order_id FROM products INNER JOIN order_products ON product.id = order_products.id ORDER BY quantity DESC LIMIT 5';
+        'SELECT p.id, p.name, p.category, SUM(op.quantity) volume,COUNT(op.order_id) orders_placed FROM (products p INNER JOIN order_products op on p.id=op.product_id) GROUP BY p.id ORDER BY volume DESC LIMIT 5';
       const result = await conn.query(sql);
       conn.release();
       return result.rows;

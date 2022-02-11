@@ -2,7 +2,7 @@
 /* eslint-disable no-unused-vars */
 enum OrderStates {
   ACTIVE = 'active',
-  SOLVED = 'completed',
+  SOLVED = 'complete',
 }
 
 export default OrderStates;

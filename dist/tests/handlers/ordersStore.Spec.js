@@ -167,7 +167,7 @@ describe('ordersRoutes', () => {
                 },
             ]);
         });
-        xit(`UPDATE PUT /orders/:id/products/:products_id`, async () => {
+        it(`UPDATE PUT /orders/:id/products/:products_id`, async () => {
             const updateProductResponse = await request
                 .patch(`/orders/${orderProduct.order_id}/products/${orderProduct.product_id}`)
                 .send(newOrderProduct)
@@ -203,7 +203,7 @@ describe('ordersRoutes', () => {
             expect(removeProductResponse.status).toBe(200);
             expect(removeProductResponse.body).toEqual({
                 id: addProductResponse.body.id,
-                quantity: orderProduct.quantity,
+                quantity: newOrderProduct.quantity,
                 order_id: `${orderProduct.order_id}`,
                 product_id: `${orderProduct.product_id}`,
             });

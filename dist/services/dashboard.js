@@ -11,7 +11,7 @@ class DasboardQueris {
     async fiveMostWanted() {
         try {
             const conn = await database_1.default.connect();
-            const sql = 'SELECT name, price, order_id FROM products INNER JOIN order_products ON product.id = order_products.id ORDER BY quantity DESC LIMIT 5';
+            const sql = 'SELECT p.id, p.name, p.category, SUM(op.quantity) volume,COUNT(op.order_id) orders_placed FROM (products p INNER JOIN order_products op on p.id=op.product_id) GROUP BY p.id ORDER BY volume DESC LIMIT 5';
             const result = await conn.query(sql);
             conn.release();
             return result.rows;

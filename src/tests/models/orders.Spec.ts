@@ -32,24 +32,39 @@ describe('Order Model', () => {
   let user: User;
   let resultUser: User;
   let product: Product;
-  let resultProduct: Product;
+  let productId: number;
   let createResult: Order;
   let order: Order;
 
   beforeAll(async () => {
     user = {
-      firstname: 'Igor',
-      lastname: 'FromTheJungle',
-      password_digest: 'password',
+      firstname: 'Robert',
+      lastname: 'De Niro',
+      password_digest: 'MeetTheParents',
     };
     resultUser = await storeUser.create(user);
     order = {
       status: OrderStates.ACTIVE,
       user_id: `${resultUser.id}`,
     };
+    const indexUserResult = await storeUser.index();
+    console.log(`index User : `);
+    console.log(indexUserResult);
   });
   afterAll(async () => {
     await storeUser.delete(`${resultUser.id}`);
+    const indexUserResult = await storeUser.index();
+    console.log(`index User : `);
+    console.log(indexUserResult);
+    const indexaddProductResult = store.indexProduct();
+    console.log(`index Products by order`);
+    console.log(indexaddProductResult);
+    const indexOrderResult = await store.index();
+    console.log(`index Order :`);
+    console.log(indexOrderResult);
+    const indexProductResult = await storeProduct.index();
+    console.log(`index Product :`);
+    console.log(indexProductResult);
   });
 
   it('create method should add an order', async () => {
@@ -88,9 +103,11 @@ describe('Order Model', () => {
         price: 40,
         category: 'book',
       };
-      resultProduct = await storeProduct.create(product);
-      const indexProduct = await storeProduct.index();
-      console.log(indexProduct);
+      const resultProduct = await storeProduct.create(product);
+      productId = resultProduct.id as number;
+      const indexProductResult = await storeProduct.index();
+      console.log(`index Product :`);
+      console.log(indexProductResult);
       orderProducts = {
         quantity: 5,
         order_id: `${createResult.id}`,
@@ -103,16 +120,14 @@ describe('Order Model', () => {
       };
     });
     afterAll(async () => {
-      console.log(resultProduct.id);
-      const indexProduct2 = await storeProduct.index();
-      console.log(indexProduct2);
-      await storeProduct.delete(`${resultProduct.id}`);
-      const indexProduct = await storeProduct.index();
-      console.log(indexProduct);
+      console.log(product.id);
+      await storeProduct.delete(`${productId}`);
+      const indexProductResult = await storeProduct.index();
+      console.log(`index Product :`);
+      console.log(indexProductResult);
     });
     it('addProduct method should add a product and a quantity to the actual order', async () => {
       addProductResult = await store.addProduct(orderProducts);
-      console.log(JSON.stringify(addProductResult));
       expect(addProductResult).toEqual({
         id: addProductResult.id,
         quantity: orderProducts.quantity,
@@ -131,7 +146,18 @@ describe('Order Model', () => {
         },
       ]);
     });
-    xit('updateProduct method should update the quantity of a product in the actual order', async () => {
+    it('indexProduct method should index all products and quantities from all orders', async () => {
+      const editProductResult = await store.indexProduct();
+      expect(editProductResult).toEqual([
+        {
+          id: addProductResult.id,
+          quantity: orderProducts.quantity,
+          order_id: `${orderProducts.order_id}`,
+          product_id: `${orderProducts.product_id}`,
+        },
+      ]);
+    });
+    it('updateProduct method should update the quantity of a product in the actual order', async () => {
       await store.updateProduct(newOrderProducts);
       const updateProductResult = await store.editProduct(
         orderProducts.order_id
@@ -150,9 +176,12 @@ describe('Order Model', () => {
         orderProducts.order_id,
         orderProducts.product_id
       );
+      const indexaddProductResult = store.indexProduct();
+      console.log(`index Products by order`);
+      console.log(JSON.stringify(indexaddProductResult));
       expect(removeProductResult).toEqual({
         id: addProductResult.id,
-        quantity: orderProducts.quantity,
+        quantity: newOrderProducts.quantity,
         order_id: `${orderProducts.order_id}`,
         product_id: `${orderProducts.product_id}`,
       });
