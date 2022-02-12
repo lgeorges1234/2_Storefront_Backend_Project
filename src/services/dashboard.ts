@@ -4,17 +4,33 @@ import client from '../database';
 
 export class DasboardQueris {
   async fiveMostWanted(): Promise<
-    { name: string; price: number; category: string; quantity: number }[]
+    { name: string; category: string; volume: string; orders_placed: string }[]
   > {
     try {
       const conn = await client.connect();
       const sql =
-        'SELECT p.id, p.name, p.category, SUM(op.quantity) volume,COUNT(op.order_id) orders_placed FROM (products p INNER JOIN order_products op on p.id=op.product_id) GROUP BY p.id ORDER BY volume DESC LIMIT 5';
+        'SELECT p.name, p.category, SUM(op.quantity) volume,COUNT(op.order_id) orders_placed FROM (products p INNER JOIN order_products op on p.id=op.product_id) GROUP BY p.id ORDER BY volume DESC LIMIT 5';
       const result = await conn.query(sql);
       conn.release();
       return result.rows;
     } catch (err) {
       throw new Error(`unable get products and orders: ${err}`);
+    }
+  }
+
+  async productByCategory(
+    productId: string
+  ): Promise<{ category: string; name: string }[]> {
+    try {
+      const conn = await client.connect();
+      const sql =
+        'SELECT category, name FROM products WHERE id=($1) GROUP BY category, name ORDER BY (name) DESC';
+      const result = await conn.query(sql, [productId]);
+      conn.release();
+      console.log(result.rows);
+      return result.rows;
+    } catch (err) {
+      throw new Error(`unable get products : ${err}`);
     }
   }
 }

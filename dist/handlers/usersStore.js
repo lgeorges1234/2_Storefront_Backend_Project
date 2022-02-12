@@ -94,7 +94,6 @@ const verifyAuthToken = (req, res, next) => {
         const authorizationHeader = req.headers.authorization;
         const token = authorizationHeader.split(' ')[1];
         jsonwebtoken_1.default.verify(token, process.env.TOKEN_SECRET);
-        console.log(`token verified`);
         next();
     }
     catch (error) {

@@ -107,7 +107,6 @@ export const verifyAuthToken = (
     const authorizationHeader = req.headers.authorization as string;
     const token = authorizationHeader.split(' ')[1];
     jwt.verify(token, process.env.TOKEN_SECRET as Secret);
-    console.log(`token verified`);
     next();
   } catch (error) {
     res.status(401);

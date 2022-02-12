@@ -89,8 +89,6 @@ export class OrderStore {
       const sql = 'SELECT * FROM order_products';
       const result = await conn.query(sql);
       conn.release();
-      console.log(`indexProduct return :`);
-      console.log(result.rows);
       return result.rows;
     } catch (error) {
       throw new Error(
@@ -105,8 +103,6 @@ export class OrderStore {
       const sql = 'SELECT * FROM order_products WHERE order_id=($1)';
       const result = await conn.query(sql, [orderId]);
       conn.release();
-      console.log(`editProduct return :`);
-      console.log(result.rows);
       return result.rows;
     } catch (error) {
       throw new Error(
@@ -144,8 +140,6 @@ export class OrderStore {
         'DELETE FROM order_products WHERE order_id=($1) AND product_id=($2) RETURNING *';
       const result = await conn.query(sql, [orderId, productId]);
       conn.release();
-      console.log(`removeProduct return :`);
-      console.log(result.rows[0]);
       return result.rows[0];
     } catch (error) {
       throw new Error(

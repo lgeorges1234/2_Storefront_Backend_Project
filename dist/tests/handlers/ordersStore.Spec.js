@@ -156,7 +156,6 @@ describe('ordersRoutes', () => {
                 .set({
                 'Content-Type': 'application/json',
             });
-            console.log(editProductResponse.body);
             expect(editProductResponse.status).toBe(200);
             expect(editProductResponse.body).toEqual([
                 {
@@ -183,23 +182,11 @@ describe('ordersRoutes', () => {
             });
         });
         it(`DELETE DELETE /orders/:id/products/:products_id`, async () => {
-            const editProductResponse2 = await request
-                .get(`/orders/${orderProduct.order_id}/products`)
-                .set({
-                'Content-Type': 'application/json',
-            });
-            console.log(editProductResponse2.body);
             const removeProductResponse = await request
                 .delete(`/orders/${orderProduct.order_id}/products/${orderProduct.product_id}`)
                 .set({
                 'Content-Type': 'application/json',
             });
-            const editProductResponse = await request
-                .get(`/orders/${orderProduct.order_id}/products`)
-                .set({
-                'Content-Type': 'application/json',
-            });
-            console.log(editProductResponse.body);
             expect(removeProductResponse.status).toBe(200);
             expect(removeProductResponse.body).toEqual({
                 id: addProductResponse.body.id,
@@ -216,15 +203,7 @@ describe('ordersRoutes', () => {
             expect(deleteErrorResponse.error).toBeTruthy;
         });
         it('correct order id number should delete the order', async () => {
-            const indexResponse2 = await request
-                .get('/orders')
-                .set('Accept', 'application/json');
-            console.log(indexResponse2.body);
             const deleteResponse = await request.delete(`/orders/${createResponse.body.id}`);
-            const indexResponse = await request
-                .get('/orders')
-                .set('Accept', 'application/json');
-            console.log(indexResponse.body);
             expect(deleteResponse.status).toBe(200);
             expect(deleteResponse.body).toEqual({
                 id: createResponse.body.id,

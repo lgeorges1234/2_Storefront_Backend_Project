@@ -47,24 +47,9 @@ describe('Order Model', () => {
       status: OrderStates.ACTIVE,
       user_id: `${resultUser.id}`,
     };
-    const indexUserResult = await storeUser.index();
-    console.log(`index User : `);
-    console.log(indexUserResult);
   });
   afterAll(async () => {
     await storeUser.delete(`${resultUser.id}`);
-    const indexUserResult = await storeUser.index();
-    console.log(`index User : `);
-    console.log(indexUserResult);
-    const indexaddProductResult = store.indexProduct();
-    console.log(`index Products by order`);
-    console.log(indexaddProductResult);
-    const indexOrderResult = await store.index();
-    console.log(`index Order :`);
-    console.log(indexOrderResult);
-    const indexProductResult = await storeProduct.index();
-    console.log(`index Product :`);
-    console.log(indexProductResult);
   });
 
   it('create method should add an order', async () => {
@@ -105,9 +90,6 @@ describe('Order Model', () => {
       };
       const resultProduct = await storeProduct.create(product);
       productId = resultProduct.id as number;
-      const indexProductResult = await storeProduct.index();
-      console.log(`index Product :`);
-      console.log(indexProductResult);
       orderProducts = {
         quantity: 5,
         order_id: `${createResult.id}`,
@@ -120,11 +102,7 @@ describe('Order Model', () => {
       };
     });
     afterAll(async () => {
-      console.log(product.id);
       await storeProduct.delete(`${productId}`);
-      const indexProductResult = await storeProduct.index();
-      console.log(`index Product :`);
-      console.log(indexProductResult);
     });
     it('addProduct method should add a product and a quantity to the actual order', async () => {
       addProductResult = await store.addProduct(orderProducts);
@@ -176,9 +154,6 @@ describe('Order Model', () => {
         orderProducts.order_id,
         orderProducts.product_id
       );
-      const indexaddProductResult = store.indexProduct();
-      console.log(`index Products by order`);
-      console.log(JSON.stringify(indexaddProductResult));
       expect(removeProductResult).toEqual({
         id: addProductResult.id,
         quantity: newOrderProducts.quantity,
