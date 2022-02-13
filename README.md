@@ -59,7 +59,7 @@ An authenticated user can :
 
 A dashboard query allows him to get current orders by user
 
-> A user is authenticated thanks to a jwt token. the token is obtained first when he is created and then when he goes through authentication process.
+> A user is authenticated thanks to a jwt token. The token is obtained first when he is created and then when he goes through authentication process.
 ---
 
 
