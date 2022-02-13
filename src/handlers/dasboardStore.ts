@@ -1,5 +1,6 @@
 import express, { Request, Response } from 'express';
 import { DasboardQueries } from '../services/dashboard';
+import { verifyAuthToken } from './usersStore';
 
 const dashboard = new DasboardQueries();
 
@@ -21,7 +22,11 @@ const currentOrdersPerUser = async (req: Request, res: Response) => {
 const dashboardRoutes = (app: express.Application) => {
   app.get('/five_most-wanted', fiveMostWanted);
   app.get('/products_by_category/:category', productByCategory);
-  app.get('/completed_order_per_user/:userId', currentOrdersPerUser);
+  app.get(
+    '/completed_order_per_user/:userId',
+    verifyAuthToken,
+    currentOrdersPerUser
+  );
 };
 
 export default dashboardRoutes;

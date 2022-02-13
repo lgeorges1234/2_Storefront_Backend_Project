@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const dashboard_1 = require("../services/dashboard");
+const usersStore_1 = require("./usersStore");
 const dashboard = new dashboard_1.DasboardQueries();
 const fiveMostWanted = async (_req, res) => {
     const result = await dashboard.fiveMostWanted();
@@ -17,6 +18,6 @@ const currentOrdersPerUser = async (req, res) => {
 const dashboardRoutes = (app) => {
     app.get('/five_most-wanted', fiveMostWanted);
     app.get('/products_by_category/:category', productByCategory);
-    app.get('/completed_order_per_user/:userId', currentOrdersPerUser);
+    app.get('/completed_order_per_user/:userId', usersStore_1.verifyAuthToken, currentOrdersPerUser);
 };
 exports.default = dashboardRoutes;

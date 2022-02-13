@@ -212,7 +212,7 @@ describe('ordersRoutes', () => {
             });
         });
     });
-    describe('Delete DELETE /orders/{id}', () => {
+    describe('Delete DELETE /orders/:id', () => {
         it('wrong order id number should return an error', async () => {
             const deleteErrorResponse = await request.delete(`/orders/56`);
             expect(deleteErrorResponse.status).toBe(401);

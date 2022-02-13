@@ -22,13 +22,13 @@ These are the notes from a meeting with the frontend developer that describe wha
 - Authenticate              '/users/authenticate' [POST]
 
 #### Orders
-- Index [token required]    '/orders' [GET]
-- Show [token required]     '/orders/:id' [GET]
-- Create [token required]   '/orders' [POST]
-- Delete [token required]   '/orders/:id' [DELETE]
+- Index                     '/orders' [GET]
+- Show                      '/orders/:id' [GET]
+- Create                    '/orders' [POST]
+- Delete                       '/orders/:id' [DELETE]
 - Current Order by user (args: user id)[token required] 
                             '/current_orders_per_user' [GET]
-- [OPTIONAL] Completed Orders by user (args: user id)[token required]                   '/completed_order_per_user' [GET]
+
 // order_products
 - IndexProduct              '/orders/products' [GET]
 - EditProduct               '/orders/:id/products' [GET]

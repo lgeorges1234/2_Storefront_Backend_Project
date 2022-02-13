@@ -19,6 +19,7 @@ let indexProductResult;
 let userId;
 let orderId;
 let productId;
+let token;
 describe('DashboardRoutes', () => {
     beforeAll(async () => {
         const user = {
@@ -26,7 +27,11 @@ describe('DashboardRoutes', () => {
             lastname: 'Pitt',
             password_digest: 'Fury',
         };
-        await storeUser.create(user);
+        const createUserResponse = await request
+            .post('/users')
+            .send(user)
+            .set('Accept', 'application/json');
+        token = createUserResponse.body;
         const indexUserResult = await storeUser.index();
         userId = `${indexUserResult[0].id}`;
         for (let i = 0; i < 7; i += 1) {
@@ -123,7 +128,10 @@ describe('DashboardRoutes', () => {
         it('should return all products of a category', async () => {
             const currentOrdersPerUser = await request
                 .get(`/completed_order_per_user/${userId}`)
-                .set('Accept', 'application/json');
+                .set({
+                Authorization: `bearer ${token}`,
+                'Content-Type': 'application/json',
+            });
             expect(currentOrdersPerUser.status).toBe(200);
             expect(currentOrdersPerUser.body).toEqual([
                 { id: orderId, status: 'active' },
