@@ -122,7 +122,6 @@ describe('Dashboard queries', () => {
             expect(store.currentOrdersPerUser).toBeDefined();
         });
         it('should return all orders of a user', async () => {
-            console.log(userId);
             const currentOrdersPerUser = await store.currentOrdersPerUser(userId);
             expect(currentOrdersPerUser).toEqual([
                 { id: orderId, status: 'active' },
