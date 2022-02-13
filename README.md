@@ -78,11 +78,11 @@ A dashboard query allows him to get current orders by user
 
 ### Example of API calls:
 
->[GET] `{current_IP}/products/5`                ->    show the fith product of the database
+>[GET] `{current_IP}/products/5`                -    show the fith product of the database
 
->[POST] `{current_IP}/products`                 ->    attach to the body's request the new product data and the jwt token to create a new product 
+>[POST] `{current_IP}/products`                 -    attach to the body's request the new product data and the jwt token to create a new product 
 
->[GET] `{current_IP}/products_by_category/car`  ->    list all products of the 'car' category
+>[GET] `{current_IP}/products_by_category/car`  -    list all products of the 'car' category
 
 #### Users
 
@@ -94,11 +94,11 @@ A dashboard query allows him to get current orders by user
 |  Delete :  | /users/:id |  [DELETE]  |  required  |
 |  Authenticate  |  /users/authenticate  |  [POST]  |  -  |
 
->[DELETE] `{current_IP}/users/5`                ->    delete the fith user of the database. A jwt token must be set in the header
+>[DELETE] `{current_IP}/users/5`                -    delete the fith user of the database. A jwt token must be set in the header
 
->[POST] `{current_IP}/users`                    ->    attach to the body's request new user's data to create a new user and receive a jwt token
+>[POST] `{current_IP}/users`                    -    attach to the body's request new user's data to create a new user and receive a jwt token
 
->[POST] `{current_IP}/users/authenticate`       ->    attach to the body's request user's data to authenticate and receive a jwt token 
+>[POST] `{current_IP}/users/authenticate`       -    attach to the body's request user's data to authenticate and receive a jwt token 
 
 
 #### Orders
@@ -119,17 +119,20 @@ A dashboard query allows him to get current orders by user
 
 ### Example of API calls:
 
->[POST] `{current_IP}/orders`                                 ->    attach to the body's request a new order's data to create a new order
+>[POST] `{current_IP}/orders`                                 -    attach to the body's request a new order's data to create a new order
 
->[GET] `{current_IP}/current_orders_per_user`                 ->    get all current orders for user 5. A jwt token must be set in the header
+>[GET] `{current_IP}/current_orders_per_user`                 -    get all current orders for user 5. A jwt token must be set in the header
 
->[PATCH] `{current_IP}/orders/4/products/2`                   ->    attach to the body's request the product 2 in the order 4 with the updated quantity
+>[PATCH] `{current_IP}/orders/4/products/2`                   -    attach to the body's request the product 2 in the order 4 with the updated quantity
 
 
 ## Available Scripts
 
 #### Run server
 `npm run start`
+
+#### Run and update the server when files change
+`npm run watch`
 
 #### Build application
 `npm run build`
