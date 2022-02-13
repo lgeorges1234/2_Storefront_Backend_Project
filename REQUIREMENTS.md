@@ -5,20 +5,36 @@ These are the notes from a meeting with the frontend developer that describe wha
 
 ## API Endpoints
 #### Products
-- Index : GET   '/products'
-- Show : GET    '/products/{:id}'
-- Create [token required] :     POST '/products'
-- [OPTIONAL] Top 5 most popular products :  GET '/five_most-wanted'
-- [OPTIONAL] Products by category (args: product category)  GET '/products_by_category'
+- Index :                   'products/' [GET]
+- Show :                    '/products/:id' [GET]
+- Create [token required] : '/products' [POST]
+- Delete [token required] : '/products/:id' [DELETE]
+- [OPTIONAL] Top 5 most popular products : 
+                            '/five_most-wanted' [GET]
+- [OPTIONAL] Products by category (args: product category): 
+                            '/products_by_category/:id' [GET]
 
 #### Users
-- Index [token required]    GET '/users'
-- Show [token required]     GET '/users/{:id}
-- Create N[token required]  POST '/users
+- Index [token required]    '/users' [GET]
+- Show [token required]     '/users/:id' [GET]
+- Create [token required]   '/users' [POST]
+- Delete [token required]   '/users/:id' [DELETE]
+- Authenticate              '/users/authenticate' [POST]
 
 #### Orders
-- Current Order by user (args: user id)[token required] GET '/current_orders_per_user'
-- [OPTIONAL] Completed Orders by user (args: user id)[token required]   GET '/completed_order_per_user'
+- Index [token required]    '/orders' [GET]
+- Show [token required]     '/orders/:id' [GET]
+- Create [token required]   '/orders' [POST]
+- Delete [token required]   '/orders/:id' [DELETE]
+- Current Order by user (args: user id)[token required] 
+                            '/current_orders_per_user' [GET]
+- [OPTIONAL] Completed Orders by user (args: user id)[token required]                   '/completed_order_per_user' [GET]
+// order_products
+- IndexProduct              '/orders/products' [GET]
+- EditProduct               '/orders/:id/products' [GET]
+- AddProduct                '/orders/:id/products' [POST]
+- UpdateProduct                '/orders/:id/products/:product_id [PATCH]
+- RemoveProduct             '/orders/:id/products/:product_id' [DELETE]
 
 ## Data Shapes
 #### Product
@@ -86,7 +102,10 @@ CREATE TABLE order_products(
     product_id bigint REFERENCES products(id)
 );
 
-net stop postgresql-x64-13
+export type OrderProducts = {
+  id?: number;
+  quantity: number;
+  order_id: string;
+  product_id: string;
+};
 
-
-yarn add jasmine-spec-reporter@7.0.0

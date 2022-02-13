@@ -39,8 +39,27 @@ describe('DashboardRoutes', () => {
     }
     indexProductResult = await storeProduct.index();
     productId = indexProductResult[0].id as unknown as number;
+    for (let i = 0; i < 7; i += 1) {
+      const order: Order = {
+        status: OrderStates.ACTIVE,
+        user_id: userId,
+      };
+      const createOrderResult = await storeOrder.create(order);
+      const orderProducts: OrderProducts = {
+        quantity: i,
+        order_id: `${createOrderResult.id}`,
+        product_id: `${indexProductResult[i].id}`,
+      };
+      await storeOrder.addProduct(orderProducts);
+    }
+    const indexOrderResult = await storeOrder.index();
+    orderId = indexOrderResult[0].id as unknown as number;
   });
   afterAll(async () => {
+    for (let i = 0; i < 7; i += 1) {
+      await storeOrder.removeProduct(`${i + orderId}`, `${i + productId}`);
+      await storeOrder.delete(`${i + orderId}`);
+    }
     for (let i = productId; i < productId + 7; i += 1) {
       await storeProduct.delete(`${i}`);
     }
@@ -48,29 +67,6 @@ describe('DashboardRoutes', () => {
     await storeUser.delete(userId);
   });
   describe('GET /fiveMostWanted', () => {
-    beforeAll(async () => {
-      for (let i = 0; i < 7; i += 1) {
-        const order: Order = {
-          status: OrderStates.ACTIVE,
-          user_id: userId,
-        };
-        const createOrderResult = await storeOrder.create(order);
-        const orderProducts: OrderProducts = {
-          quantity: i,
-          order_id: `${createOrderResult.id}`,
-          product_id: `${indexProductResult[i].id}`,
-        };
-        await storeOrder.addProduct(orderProducts);
-      }
-      const indexOrderResult = await storeOrder.index();
-      orderId = indexOrderResult[0].id as unknown as number;
-    });
-    afterAll(async () => {
-      for (let i = 0; i < 7; i += 1) {
-        await storeOrder.removeProduct(`${i + orderId}`, `${i + productId}`);
-        await storeOrder.delete(`${i + orderId}`);
-      }
-    });
     it('should return the top 5 most popular products', async () => {
       const fiveMostWantedResult = await request
         .get('/five_most-wanted')
@@ -110,16 +106,34 @@ describe('DashboardRoutes', () => {
       ]);
     });
   });
-  describe('productByCategory query', () => {
+  describe('GET /productByCategory', () => {
     it('should return all products of a category', async () => {
       const productByCategory = await request
         .get('/products_by_category/Category2')
         .set('Accept', 'application/json');
+      expect(productByCategory.status).toBe(200);
       expect(productByCategory.body).toEqual([
         {
           category: 'Category2',
           name: 'Product2',
         },
+      ]);
+    });
+  });
+  describe('GET /completed_order_per_user/:userId', () => {
+    it('should return all products of a category', async () => {
+      const currentOrdersPerUser = await request
+        .get(`/completed_order_per_user/${userId}`)
+        .set('Accept', 'application/json');
+      expect(currentOrdersPerUser.status).toBe(200);
+      expect(currentOrdersPerUser.body).toEqual([
+        { id: orderId as unknown as string, status: 'active' },
+        { id: (orderId + 1) as unknown as string, status: 'active' },
+        { id: (orderId + 2) as unknown as string, status: 'active' },
+        { id: (orderId + 3) as unknown as string, status: 'active' },
+        { id: (orderId + 4) as unknown as string, status: 'active' },
+        { id: (orderId + 5) as unknown as string, status: 'active' },
+        { id: (orderId + 6) as unknown as string, status: 'active' },
       ]);
     });
   });

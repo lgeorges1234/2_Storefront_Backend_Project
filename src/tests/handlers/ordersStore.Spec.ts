@@ -157,6 +157,22 @@ describe('ordersRoutes', () => {
         product_id: `${orderProduct.product_id}`,
       });
     });
+    it(`INDEX GET /orders/products`, async () => {
+      const indexProductResponse = await request
+        .get(`/orders/${orderProduct.order_id}/products`)
+        .set({
+          'Content-Type': 'application/json',
+        });
+      expect(indexProductResponse.status).toBe(200);
+      expect(indexProductResponse.body).toEqual([
+        {
+          id: addProductResponse.body.id,
+          quantity: orderProduct.quantity,
+          order_id: `${orderProduct.order_id}`,
+          product_id: `${orderProduct.product_id}`,
+        },
+      ]);
+    });
     it(`EDIT GET /orders/:id/products`, async () => {
       const editProductResponse = await request
         .get(`/orders/${orderProduct.order_id}/products`)
@@ -208,7 +224,7 @@ describe('ordersRoutes', () => {
     });
   });
 
-  describe('Delete DELETE /orders/{id}', () => {
+  describe('Delete DELETE /orders/:id', () => {
     it('wrong order id number should return an error', async () => {
       const deleteErrorResponse = await request.delete(`/orders/56`);
       expect(deleteErrorResponse.status).toBe(401);

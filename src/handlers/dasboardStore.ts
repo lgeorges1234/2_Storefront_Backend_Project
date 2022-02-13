@@ -13,9 +13,15 @@ const productByCategory = async (req: Request, res: Response) => {
   res.json(result);
 };
 
+const currentOrdersPerUser = async (req: Request, res: Response) => {
+  const result = await dashboard.currentOrdersPerUser(req.params.userId);
+  res.json(result);
+};
+
 const dashboardRoutes = (app: express.Application) => {
   app.get('/five_most-wanted', fiveMostWanted);
   app.get('/products_by_category/:category', productByCategory);
+  app.get('/completed_order_per_user/:userId', currentOrdersPerUser);
 };
 
 export default dashboardRoutes;

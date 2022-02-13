@@ -62,6 +62,16 @@ const addProduct = async (req: Request, res: Response) => {
   }
 };
 
+const indexProduct = async (req: Request, res: Response) => {
+  try {
+    const editProductResult = await store.indexProduct();
+    res.json(editProductResult);
+  } catch (error) {
+    res.status(400);
+    res.json(error);
+  }
+};
+
 const editProduct = async (req: Request, res: Response) => {
   const orderId = req.params.id;
   try {
@@ -143,6 +153,7 @@ const ordersRoutes = (app: express.Application) => {
   app.delete('/orders/:id', verifyId, destroy);
   // add, update, edit and remove product to an order
   app.post('/orders/:id/products', addProduct);
+  app.get('/orders/products', indexProduct);
   app.get('/orders/:id/products', editProduct);
   app.patch('/orders/:id/products/:product_id', updateProduct);
   app.delete('/orders/:id/products/:product_id', removeProduct);

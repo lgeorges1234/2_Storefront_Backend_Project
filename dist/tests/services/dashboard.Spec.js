@@ -37,37 +37,33 @@ describe('Dashboard queries', () => {
         }
         indexProductResult = await storeProduct.index();
         productId = indexProductResult[0].id;
+        for (let i = 0; i < 7; i += 1) {
+            const order = {
+                status: enum_1.default.ACTIVE,
+                user_id: userId,
+            };
+            const createOrderResult = await storeOrder.create(order);
+            const orderProducts = {
+                quantity: i,
+                order_id: `${createOrderResult.id}`,
+                product_id: `${indexProductResult[i].id}`,
+            };
+            await storeOrder.addProduct(orderProducts);
+        }
+        const indexOrderResult = await storeOrder.index();
+        orderId = indexOrderResult[0].id;
     });
     afterAll(async () => {
+        for (let i = 0; i < 7; i += 1) {
+            await storeOrder.removeProduct(`${i + orderId}`, `${i + productId}`);
+            await storeOrder.delete(`${i + orderId}`);
+        }
         for (let i = productId; i < productId + 7; i += 1) {
             await storeProduct.delete(`${i}`);
         }
         await storeUser.delete(userId);
     });
     describe('fiveMostWanted query', () => {
-        beforeAll(async () => {
-            for (let i = 0; i < 7; i += 1) {
-                const order = {
-                    status: enum_1.default.ACTIVE,
-                    user_id: userId,
-                };
-                const createOrderResult = await storeOrder.create(order);
-                const orderProducts = {
-                    quantity: i,
-                    order_id: `${createOrderResult.id}`,
-                    product_id: `${indexProductResult[i].id}`,
-                };
-                await storeOrder.addProduct(orderProducts);
-            }
-            const indexOrderResult = await storeOrder.index();
-            orderId = indexOrderResult[0].id;
-        });
-        afterAll(async () => {
-            for (let i = 0; i < 7; i += 1) {
-                await storeOrder.removeProduct(`${i + orderId}`, `${i + productId}`);
-                await storeOrder.delete(`${i + orderId}`);
-            }
-        });
         it('should have a fiveMostWanted method', () => {
             expect(store.fiveMostWanted).toBeDefined();
         });
@@ -118,6 +114,24 @@ describe('Dashboard queries', () => {
                     category: 'Category1',
                     name: 'Product1',
                 },
+            ]);
+        });
+    });
+    describe('currentOrdersPerUser query', () => {
+        it('should have a currentOrdersPerUser method', () => {
+            expect(store.currentOrdersPerUser).toBeDefined();
+        });
+        it('should return all orders of a user', async () => {
+            console.log(userId);
+            const currentOrdersPerUser = await store.currentOrdersPerUser(userId);
+            expect(currentOrdersPerUser).toEqual([
+                { id: orderId, status: 'active' },
+                { id: (orderId + 1), status: 'active' },
+                { id: (orderId + 2), status: 'active' },
+                { id: (orderId + 3), status: 'active' },
+                { id: (orderId + 4), status: 'active' },
+                { id: (orderId + 5), status: 'active' },
+                { id: (orderId + 6), status: 'active' },
             ]);
         });
     });
