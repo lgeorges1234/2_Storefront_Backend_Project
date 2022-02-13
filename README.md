@@ -18,12 +18,12 @@ The database is composed of three tables  : Users,  Orders and Products.
 
 |  Users |  Orders |  Products  |
 | ------------- |-------------| -----|
-|   firstName   |   Product id      |   name        |
-|   lastName    |   Quantity        |   price       |
-|   password    |   User id         |   category    |
+|   firstName   |   product id      |   name        |
+|   lastName    |   quantity        |   price       |
+|   password    |   user id         |   category    |
 |               |   status*         |               |
 
-> status can be either: ACTIVATE or COMPLETE
+> status can be either: ACTIVE or COMPLETE
 
 
 ---
@@ -31,16 +31,16 @@ The database is composed of three tables  : Users,  Orders and Products.
 ## Dependencies
 
 Project is created with:
-* "bcrypt": "^5.0.1",
-* "body-parser": "^1.19.0",
-* "db-migrate": "^0.11.13",
-* "db-migrate-pg": "^1.2.2",
-* "dotenv": "^14.3.2",
-* "express": "^4.17.2",
-* "jsonwebtoken": "^8.5.1",
-* "pg": "^8.5.1",
-* "prettier": "^2.5.1",
-* "typescript": "^4.1.3"
+* bcrypt: ^5.0.1,
+* body-parser: ^1.19.0,
+* db-migrate: ^0.11.13,
+* db-migrate-pg: ^1.2.2,
+* dotenv: ^14.3.2,
+* express: ^4.17.2,
+* jsonwebtoken: ^8.5.1,
+* pg: ^8.5.1,
+* prettier: ^2.5.1,
+* typescript: ^4.1.3
 ---
 
 ## User actions
@@ -50,15 +50,16 @@ It can also access dashboard queries such as :
 - get the five most popular products,
 - get all products that composed a category,
 
-> A user is authenticated thanks to a jwt token. the token is obtained first when he is created and then when he goes through authentication process.
-
 An authenticated user can : 
+
 - create and delete products from the database Products, 
 - edit all existing users,
 - create and delete users,
 - get all current orders by user
+
 A dashboard query allows him to get current orders by user
 
+> A user is authenticated thanks to a jwt token. the token is obtained first when he is created and then when he goes through authentication process.
 ---
 
 
@@ -68,12 +69,12 @@ A dashboard query allows him to get current orders by user
 
 |  Actions |  Route |  Request  | Auth |
 | ------------- |-------------| -----|-----|
-|  Index :       | '/products'  | [GET]  |  -  |
-|  Show :        | '/products/:id' | [GET]  |  -  |
-|  Create :  | '/products'  | [POST]  |  required  |
-|  Delete :  | '/products/:id' |  [DELETE]  |  required  |
-|  Top 5 most popular products :  |  '/five_most-wanted'  | [GET]  |  -  |
-|  Products by category | '/products_by_category/:category' |  [GET]  |  -  |
+|  Index :       | /products  | [GET]  |  -  |
+|  Show :        | /products/:id | [GET]  |  -  |
+|  Create :  | /products  | [POST]  |  required  |
+|  Delete :  | /products/:id |  [DELETE]  |  required  |
+|  Top 5 most popular products :  |  /five_most-wanted  | [GET]  |  -  |
+|  Products by category | /products_by_category/:category  |  [GET]  |  -  |
 
 ### Example of API calls:
 
@@ -87,13 +88,13 @@ A dashboard query allows him to get current orders by user
 
 |  Actions |  Route |  Request  | Auth |
 | ------------- |-------------| -----|-----|
-|  Index :       | '/users'  | [GET]  |  required  |
-|  Show :        | '/users/:id' | [GET]  |  required  |
-|  Create :  | '/users'  | [POST]  |  required  |
-|  Delete :  | '/users/:id' |  [DELETE]  |  required  |
-|  Authenticate  |  '/users/authenticate'  |  [POST]  |  -  |
+|  Index :       | /users  | [GET]  |  required  |
+|  Show :        | /users/:id | [GET]  |  required  |
+|  Create :  | /users  | [POST]  |  required  |
+|  Delete :  | /users/:id |  [DELETE]  |  required  |
+|  Authenticate  |  /users/authenticate  |  [POST]  |  -  |
 
->[DELETE] `{current_IP}/users/5`                ->    delete the fith order of the database. A jwt token must be in the header
+>[DELETE] `{current_IP}/users/5`                ->    delete the fith user of the database. A jwt token must be set in the header
 
 >[POST] `{current_IP}/users`                    ->    attach to the body's request new user's data to create a new user and receive a jwt token
 
@@ -104,25 +105,25 @@ A dashboard query allows him to get current orders by user
 
 |  Actions |  Route |  Request  | Auth |
 | ------------- |-------------| -----|-----|
-|  Index :       | '/orders'  | [GET]  |  -  |
-| Show :        | '/orders/:id' | [GET]  |  -  |
-|  Create :  | '/orders'  | [POST]  |  required  |
-|  Delete :  | '/orders/:id' |  [DELETE]  |  required  |
-|  Current Order by user : | '/current_orders_per_user/5'  | [GET]  |  required  |
-|  Index all orders and associated products :  |  '/orders/products'  |  [GET]  |  -  |
-|  Edit products from an order :   |  '/orders/:id/products'  |  [GET]  |  -  |
-|  Add product to an order : |  '/orders/:id/products'  |  [POST]  |  -  |
-|  Update quantity to an order "  |  '/orders/:id/products/:product_id'  |  [PATCH]  |  -  |
-|  Remove product  from an order : |  '/orders/:id/products/:product_id'  |  [DELETE]  |  -  |
+|  Index :       | /orders  | [GET]  |  -  |
+| Show :        | /orders/:id | [GET]  |  -  |
+|  Create :  | /orders  | [POST]  |  required  |
+|  Delete :  | /orders/:id |  [DELETE]  |  required  |
+|  Current Order by user : | /current_orders_per_user/5  | [GET]  |  required  |
+|  Index all orders and associated products :  |  /orders/products  |  [GET]  |  -  |
+|  Edit products from an order :   |  /orders/:id/products  |  [GET]  |  -  |
+|  Add product to an order : |  /orders/:id/products  |  [POST]  |  -  |
+|  Update quantity to an order "  |  /orders/:id/products/:product_id  |  [PATCH]  |  -  |
+|  Remove product  from an order : |  /orders/:id/products/:product_id  |  [DELETE]  |  -  |
 
 
 ### Example of API calls:
 
->[POST] `{current_IP}/orders`                                 ->    attach to the body's request new order's data to create a new order
+>[POST] `{current_IP}/orders`                                 ->    attach to the body's request a new order's data to create a new order
 
->[GET] `{current_IP}/current_orders_per_user`                 ->    get all current orders for user 5> A jwt token must be in the header
+>[GET] `{current_IP}/current_orders_per_user`                 ->    get all current orders for user 5. A jwt token must be set in the header
 
->[PATCH] `{current_IP}/orders/4/products/2`                  ->    modify the quantity of the second product in the fourth order
+>[PATCH] `{current_IP}/orders/4/products/2`                   ->    attach to the body's request the product 2 in the order 4 with the updated quantity
 
 
 ## Available Scripts
