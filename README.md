@@ -51,7 +51,8 @@ It can also access dashboard queries such as :
 - get the five most popular products,
 - get all products that composed a category,
 
-A user is authenticated thanks to a jwt token. He obtains this token first when he is created and then when he goes through authentication process.
+> A user is authenticated thanks to a jwt token. He obtains this token first when he is created and then when he goes through authentication process.
+
 An authenticated user can : 
 - create and delete products from the database Products, 
 - edit all existing users,
@@ -65,14 +66,17 @@ A dashboard query allows him to get current orders by user
 ## API calls
 
 #### Products
-- Index :                   'products/' [GET]
-- Show :                    '/products/:id' [GET]
-- Create [token required] : '/products' [POST]
-- Delete [token required] : '/products/:id' [DELETE]
-- Top 5 most popular products : 
-                            '/five_most-wanted' [GET]
-- Products by category (args: product category): 
-                            '/products_by_category/:id' [GET]
+
+|  ### Users |  ### Orders |  ### Products  |
+| ------------- |-------------| -----|
+|  Index :       |            'products/' [GET]  |
+| Show :        |           '/products/:id' [GET]  |
+|  Create [token required] :  | '/products' [POST]  |
+|  Delete [token required] :  | '/products/:id' [DELETE]  |
+|  Top 5 most popular products :  |
+                            '/five_most-wanted' [GET]  |
+|  Products by category (args: product category):  |
+                            '/products_by_category/:id' [GET]  |
 
 #### Users
 - Index [token required]    '/users' [GET]
