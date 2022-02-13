@@ -26,8 +26,8 @@ describe('User Model', () => {
     beforeAll(() => {
         user = {
             firstname: 'Georges',
-            lastname: 'Delajungle',
-            password_digest: 'password',
+            lastname: 'Clooney',
+            password_digest: 'OBrother',
         };
     });
     it('create method should add a user', async () => {

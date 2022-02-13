@@ -3,11 +3,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.DasboardQueris = void 0;
+exports.DasboardQueries = void 0;
 /* eslint-disable class-methods-use-this */
 /* eslint-disable import/prefer-default-export */
 const database_1 = __importDefault(require("../database"));
-class DasboardQueris {
+class DasboardQueries {
     async fiveMostWanted() {
         try {
             const conn = await database_1.default.connect();
@@ -20,13 +20,12 @@ class DasboardQueris {
             throw new Error(`unable get products and orders: ${err}`);
         }
     }
-    async productByCategory(productId) {
+    async productByCategory(category) {
         try {
             const conn = await database_1.default.connect();
-            const sql = 'SELECT category, name FROM products WHERE id=($1) GROUP BY category, name ORDER BY (name) DESC';
-            const result = await conn.query(sql, [productId]);
+            const sql = 'SELECT category, name FROM products WHERE category=($1) GROUP BY category, name ORDER BY (name) DESC';
+            const result = await conn.query(sql, [category]);
             conn.release();
-            console.log(result.rows);
             return result.rows;
         }
         catch (err) {
@@ -34,4 +33,4 @@ class DasboardQueris {
         }
     }
 }
-exports.DasboardQueris = DasboardQueris;
+exports.DasboardQueries = DasboardQueries;

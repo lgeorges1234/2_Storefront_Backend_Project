@@ -2,7 +2,7 @@
 /* eslint-disable import/prefer-default-export */
 import client from '../database';
 
-export class DasboardQueris {
+export class DasboardQueries {
   async fiveMostWanted(): Promise<
     { name: string; category: string; volume: string; orders_placed: string }[]
   > {
@@ -19,15 +19,14 @@ export class DasboardQueris {
   }
 
   async productByCategory(
-    productId: string
+    category: string
   ): Promise<{ category: string; name: string }[]> {
     try {
       const conn = await client.connect();
       const sql =
-        'SELECT category, name FROM products WHERE id=($1) GROUP BY category, name ORDER BY (name) DESC';
-      const result = await conn.query(sql, [productId]);
+        'SELECT category, name FROM products WHERE category=($1) GROUP BY category, name ORDER BY (name) DESC';
+      const result = await conn.query(sql, [category]);
       conn.release();
-      console.log(result.rows);
       return result.rows;
     } catch (err) {
       throw new Error(`unable get products : ${err}`);

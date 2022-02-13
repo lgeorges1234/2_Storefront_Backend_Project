@@ -3,13 +3,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+/* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable no-await-in-loop */
-const dashboard_1 = require("../../services/dashboard");
+const supertest_1 = __importDefault(require("supertest"));
+const server_1 = __importDefault(require("../../server"));
 const products_1 = require("../../models/products");
 const orders_1 = require("../../models/orders");
 const enum_1 = __importDefault(require("../../utils/enum"));
 const users_1 = require("../../models/users");
-const store = new dashboard_1.DasboardQueris();
+const request = (0, supertest_1.default)(server_1.default);
 const storeProduct = new products_1.ProductStore();
 const storeUser = new users_1.UserStore();
 const storeOrder = new orders_1.OrderStore();
@@ -17,12 +19,12 @@ let indexProductResult;
 let userId;
 let orderId;
 let productId;
-describe('Dashboard queries', () => {
+describe('DashboardRoutes', () => {
     beforeAll(async () => {
         const user = {
-            firstname: 'Robert',
-            lastname: 'Redford',
-            password_digest: 'LionsAndLambs',
+            firstname: 'Brad',
+            lastname: 'Pitt',
+            password_digest: 'Fury',
         };
         await storeUser.create(user);
         const indexUserResult = await storeUser.index();
@@ -36,18 +38,15 @@ describe('Dashboard queries', () => {
             await storeProduct.create(product);
         }
         indexProductResult = await storeProduct.index();
-        productId = `${indexProductResult[0].id}`;
+        productId = indexProductResult[0].id;
     });
     afterAll(async () => {
-        for (let i = parseInt(productId, 10); i < parseInt(productId, 10) + 7; i += 1) {
+        for (let i = productId; i < productId + 7; i += 1) {
             await storeProduct.delete(`${i}`);
         }
         await storeUser.delete(userId);
     });
-    describe('fiveMostWanted query', () => {
-        it('should have a fiveMostWanted method', () => {
-            expect(store.fiveMostWanted).toBeDefined();
-        });
+    describe('GET /fiveMostWanted', () => {
         beforeAll(async () => {
             for (let i = 0; i < 7; i += 1) {
                 const order = {
@@ -63,31 +62,20 @@ describe('Dashboard queries', () => {
                 await storeOrder.addProduct(orderProducts);
             }
             const indexOrderResult = await storeOrder.index();
-            orderId = `${indexOrderResult[0].id}`;
-            const indexaddProductResult = await storeOrder.indexProduct();
-            console.log(`indexOrderResult : `);
-            console.log(indexaddProductResult);
-            const indexProductResult2 = await storeOrder.index();
-            console.log(`indexOrderResult2 : `);
-            console.log(indexProductResult2);
+            orderId = indexOrderResult[0].id;
         });
         afterAll(async () => {
-            for (let i = parseInt(orderId, 10); i < parseInt(orderId, 10) + 7; i += 1) {
-                await storeOrder.removeProduct(`${i}`, `${i + 1}`);
-                await storeOrder.delete(`${i}`);
+            for (let i = 0; i < 7; i += 1) {
+                await storeOrder.removeProduct(`${i + orderId}`, `${i + productId}`);
+                await storeOrder.delete(`${i + orderId}`);
             }
-            const indexaddProductResult = await storeOrder.indexProduct();
-            console.log(`indexaddProductResult : `);
-            console.log(indexaddProductResult);
-            const indexProductResult2 = await storeOrder.index();
-            console.log(`indexProductResult2 : `);
-            console.log(indexProductResult2);
         });
-        it('should return the top 5 most popular products ', async () => {
-            const fiveMostWantedResult = await store.fiveMostWanted();
-            console.log(`fiveMostWantedResult : `);
-            console.log(fiveMostWantedResult);
-            expect(fiveMostWantedResult).toEqual([
+        it('should return the top 5 most popular products', async () => {
+            const fiveMostWantedResult = await request
+                .get('/five_most-wanted')
+                .set('Accept', 'application/json');
+            expect(fiveMostWantedResult.status).toBe(200);
+            expect(fiveMostWantedResult.body).toEqual([
                 {
                     name: 'Product6',
                     category: 'Category6',
@@ -122,15 +110,14 @@ describe('Dashboard queries', () => {
         });
     });
     describe('productByCategory query', () => {
-        it('should have a productByCategory method', () => {
-            expect(store.productByCategory).toBeDefined();
-        });
         it('should return all products of a category', async () => {
-            const productByCategory = await store.productByCategory(productId);
-            expect(productByCategory).toEqual([
+            const productByCategory = await request
+                .get('/products_by_category/Category2')
+                .set('Accept', 'application/json');
+            expect(productByCategory.body).toEqual([
                 {
-                    category: 'Category0',
-                    name: 'Product0',
+                    category: 'Category2',
+                    name: 'Product2',
                 },
             ]);
         });

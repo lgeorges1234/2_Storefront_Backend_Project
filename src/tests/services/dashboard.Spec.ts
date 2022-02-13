@@ -1,11 +1,11 @@
 /* eslint-disable no-await-in-loop */
-import { DasboardQueris } from '../../services/dashboard';
+import { DasboardQueries } from '../../services/dashboard';
 import { Product, ProductStore } from '../../models/products';
 import { Order, OrderProducts, OrderStore } from '../../models/orders';
 import OrderStates from '../../utils/enum';
 import { UserStore } from '../../models/users';
 
-const store = new DasboardQueris();
+const store = new DasboardQueries();
 const storeProduct = new ProductStore();
 const storeUser = new UserStore();
 const storeOrder = new OrderStore();
@@ -13,15 +13,15 @@ const storeOrder = new OrderStore();
 let indexProductResult: Product[];
 
 let userId: string;
-let orderId: string;
-let productId: string;
+let orderId: number;
+let productId: number;
 
 describe('Dashboard queries', () => {
   beforeAll(async () => {
     const user = {
       firstname: 'Robert',
-      lastname: 'Redford',
-      password_digest: 'LionsAndLambs',
+      lastname: 'De Niro',
+      password_digest: 'MeetTheParents',
     };
     await storeUser.create(user);
     const indexUserResult = await storeUser.index();
@@ -35,23 +35,16 @@ describe('Dashboard queries', () => {
       await storeProduct.create(product);
     }
     indexProductResult = await storeProduct.index();
-    productId = `${indexProductResult[0].id}`;
+    productId = indexProductResult[0].id as unknown as number;
   });
   afterAll(async () => {
-    for (
-      let i = parseInt(productId, 10);
-      i < parseInt(productId, 10) + 7;
-      i += 1
-    ) {
+    for (let i = productId; i < productId + 7; i += 1) {
       await storeProduct.delete(`${i}`);
     }
 
     await storeUser.delete(userId);
   });
   describe('fiveMostWanted query', () => {
-    it('should have a fiveMostWanted method', () => {
-      expect(store.fiveMostWanted).toBeDefined();
-    });
     beforeAll(async () => {
       for (let i = 0; i < 7; i += 1) {
         const order: Order = {
@@ -67,34 +60,19 @@ describe('Dashboard queries', () => {
         await storeOrder.addProduct(orderProducts);
       }
       const indexOrderResult = await storeOrder.index();
-      orderId = `${indexOrderResult[0].id}`;
-      const indexaddProductResult = await storeOrder.indexProduct();
-      console.log(`indexOrderResult : `);
-      console.log(indexaddProductResult);
-      const indexProductResult2 = await storeOrder.index();
-      console.log(`indexOrderResult2 : `);
-      console.log(indexProductResult2);
+      orderId = indexOrderResult[0].id as unknown as number;
     });
     afterAll(async () => {
-      for (
-        let i = parseInt(orderId, 10);
-        i < parseInt(orderId, 10) + 7;
-        i += 1
-      ) {
-        await storeOrder.removeProduct(`${i}`, `${i + 1}`);
-        await storeOrder.delete(`${i}`);
+      for (let i = 0; i < 7; i += 1) {
+        await storeOrder.removeProduct(`${i + orderId}`, `${i + productId}`);
+        await storeOrder.delete(`${i + orderId}`);
       }
-      const indexaddProductResult = await storeOrder.indexProduct();
-      console.log(`indexaddProductResult : `);
-      console.log(indexaddProductResult);
-      const indexProductResult2 = await storeOrder.index();
-      console.log(`indexProductResult2 : `);
-      console.log(indexProductResult2);
+    });
+    it('should have a fiveMostWanted method', () => {
+      expect(store.fiveMostWanted).toBeDefined();
     });
     it('should return the top 5 most popular products ', async () => {
       const fiveMostWantedResult = await store.fiveMostWanted();
-      console.log(`fiveMostWantedResult : `);
-      console.log(fiveMostWantedResult);
       expect(fiveMostWantedResult).toEqual([
         {
           name: 'Product6',
@@ -134,11 +112,11 @@ describe('Dashboard queries', () => {
       expect(store.productByCategory).toBeDefined();
     });
     it('should return all products of a category', async () => {
-      const productByCategory = await store.productByCategory(productId);
+      const productByCategory = await store.productByCategory('Category1');
       expect(productByCategory).toEqual([
         {
-          category: 'Category0',
-          name: 'Product0',
+          category: 'Category1',
+          name: 'Product1',
         },
       ]);
     });
