@@ -48,7 +48,7 @@ Project is created with:
 A user can create an order and then add, remove, update, edit and delete products from this order.
 It can also access dashboard queries such as :
 - get the five most popular products,
-- get all products that composed a category,
+- get all products by category,
 
 An authenticated user can : 
 
