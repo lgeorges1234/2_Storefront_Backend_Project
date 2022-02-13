@@ -16,7 +16,7 @@
 
 The database is composed of three tables  : Users,  Orders and Products.
 
-|  ### Users |  ### Orders |  ### Products  |
+|  Users |  Orders |  Products  |
 | ------------- |-------------| -----|
 |   id          |   id              |   id          |
 |   firstName   |   Product id      |   name        |
@@ -67,37 +67,39 @@ A dashboard query allows him to get current orders by user
 
 #### Products
 
-|  ### Users |  ### Orders |  ### Products  |
-| ------------- |-------------| -----|
-|  Index :       |            'products/' [GET]  |
-| Show :        |           '/products/:id' [GET]  |
-|  Create [token required] :  | '/products' [POST]  |
-|  Delete [token required] :  | '/products/:id' [DELETE]  |
-|  Top 5 most popular products :  |
-                            '/five_most-wanted' [GET]  |
-|  Products by category (args: product category):  |
-                            '/products_by_category/:id' [GET]  |
+|  Actions |  Route |  Request  | Auth |
+| ------------- |-------------| -----|-----|
+|  Index :       | '/products'  | [GET]  |  -  |
+| Show :        | '/products/:id' | [GET]  |  -  |
+|  Create :  | '/products'  | [POST]  |  required  |
+|  Delete :  | '/products/:id' |  [DELETE]  |  required  |
+|  Top 5 most popular products :  |  '/five_most-wanted'  | [GET]  |  -  |
+|  Products by category | '/products_by_category/:category' |  [GET]  |  -  |
 
 #### Users
-- Index [token required]    '/users' [GET]
-- Show [token required]     '/users/:id' [GET]
-- Create [token required]   '/users' [POST]
-- Delete [token required]   '/users/:id' [DELETE]
-- Authenticate              '/users/authenticate' [POST]
+
+|  Actions |  Route |  Request  | Auth |
+| ------------- |-------------| -----|-----|
+|  Index :       | '/users'  | [GET]  |  required  |
+|  Show :        | '/users/:id' | [GET]  |  required  |
+|  Create :  | '/users'  | [POST]  |  required  |
+|  Delete :  | '/users/:id' |  [DELETE]  |  required  |
+|  Authenticate  |  '/users/authenticate'  |  [POST]  |  -  |
 
 #### Orders
-- Index                     '/orders' [GET]
-- Show                      '/orders/:id' [GET]
-- Create                    '/orders' [POST]
-- Delete                       '/orders/:id' [DELETE]
-- Current Order by user (args: user id)[token required] 
-                            '/current_orders_per_user' [GET]
- order_products
-- IndexProduct              '/orders/products' [GET]
-- EditProduct               '/orders/:id/products' [GET]
-- AddProduct                '/orders/:id/products' [POST]
-- UpdateProduct                '/orders/:id/products/:product_id [PATCH]
-- RemoveProduct             '/orders/:id/products/:product_id' [DELETE]
+
+|  Actions |  Route |  Request  | Auth |
+| ------------- |-------------| -----|-----|
+|  Index :       | '/orders'  | [GET]  |  -  |
+| Show :        | '/orders/:id' | [GET]  |  -  |
+|  Create :  | '/orders'  | [POST]  |  required  |
+|  Delete :  | '/orders/:id' |  [DELETE]  |  required  |
+|  Current Order by user | '/current_orders_per_user'  | [GET]  |  required  |
+|  IndexProduct  |  '/orders/products'  |  [GET]  |  -  |
+|  EditProduct  |  '/orders/:id/products'  |  [GET]  |  -  |
+|  AddProduct  |  '/orders/:id/products'  |  [POST]  |  -  |
+|  UpdateProduct  |  '/orders/:id/products/:product_id  |  [PATCH]  |  -  |
+|  RemoveProduct  |  '/orders/:id/products/:product_id  |  [DELETE]  |  -  |
 
 
 ### Example of API calls:
