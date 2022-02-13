@@ -1,4 +1,4 @@
-# online storefront API
+# online storefront backend API
 
 ## Table of contents
 
@@ -11,63 +11,52 @@
 
 ## General info
 
-|    API to a product store database. |
+|    API to access a products store database. |
 | :------------- |
 
 The database is composed of three tables  : Users,  Orders and Products.
 
-### Users
+|  ### Users |  ### Orders |  ### Products  |
+| ------------- |-------------| -----|
+|   id          |   id              |   id          |
+|   firstName   |   Product id      |   name        |
+|   lastName    |   Quantity        |   price       |
+|   password    |   User id         |   category    |
+|               |   status*         |               |
 
-- id
-- firstName
-- lastName
-- password
+* status can be either: ACTIVATE or COMPLETE
 
-### Orders
-
-- id
-- id of each product in the order
-- quantity of each product in the order
-- user_id
-- status of order (active or complete)
-
-### Products
-
--  id
-- name
-- price
-- category
 
 ---
 
 ## Dependencies
 
 Project is created with:
-    "bcrypt": "^5.0.1",
-    "body-parser": "^1.19.0",
-    "db-migrate": "^0.11.13",
-    "db-migrate-pg": "^1.2.2",
-    "dotenv": "^14.3.2",
-    "express": "^4.17.2",
-    "jsonwebtoken": "^8.5.1",
-    "pg": "^8.5.1",
-    "prettier": "^2.5.1",
-    "typescript": "^4.1.3"
+* "bcrypt": "^5.0.1",
+* "body-parser": "^1.19.0",
+* "db-migrate": "^0.11.13",
+* "db-migrate-pg": "^1.2.2",
+* "dotenv": "^14.3.2",
+* "express": "^4.17.2",
+* "jsonwebtoken": "^8.5.1",
+* "pg": "^8.5.1",
+* "prettier": "^2.5.1",
+* "typescript": "^4.1.3"
 ---
 
 ## User actions
 
 A user can create an order and then add, remove, update, edit and delete products from this order.
 It can also access dashboard queries such as :
-> get the five most popular products,
-> get all products that composed a category,
+- get the five most popular products,
+- get all products that composed a category,
 
 A user is authenticated thanks to a jwt token. He obtains this token first when he is created and then when he goes through authentication process.
 An authenticated user can : 
-> create and delete products from the database Products, 
-> edit all existing users,
-> create and delete users,
-> get all current orders by user
+- create and delete products from the database Products, 
+- edit all existing users,
+- create and delete users,
+- get all current orders by user
 A dashboard query allows him to get current orders by user
 
 ---
@@ -76,13 +65,13 @@ A dashboard query allows him to get current orders by user
 ## API calls
 
 #### Products
-> Index :                   'products/' [GET]
-> Show :                    '/products/:id' [GET]
-> Create [token required] : '/products' [POST]
-> Delete [token required] : '/products/:id' [DELETE]
-> Top 5 most popular products : 
+- Index :                   'products/' [GET]
+- Show :                    '/products/:id' [GET]
+- Create [token required] : '/products' [POST]
+- Delete [token required] : '/products/:id' [DELETE]
+- Top 5 most popular products : 
                             '/five_most-wanted' [GET]
-> Products by category (args: product category): 
+- Products by category (args: product category): 
                             '/products_by_category/:id' [GET]
 
 #### Users
