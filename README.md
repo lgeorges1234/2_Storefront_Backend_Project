@@ -41,6 +41,7 @@ Project is created with:
 * pg: ^8.5.1,
 * prettier: ^2.5.1,
 * typescript: ^4.1.3
+
 ---
 
 ## User actions
@@ -142,6 +143,8 @@ A dashboard query allows him to get current orders by user
 
 #### Run jasmine tests
 `npm run jasmine --silent`
+
+> 'set' has been used to set the env variable to test. Please change this in case of working to another platform than windows
 
 #### Run eslint
 `npm run eslint`
