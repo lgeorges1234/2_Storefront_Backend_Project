@@ -81,7 +81,7 @@ A dashboard query allows him to get current orders by user
 
 >[GET] `{current_IP}/products/5`                -    show the fith product of the database
 
->[POST] `{current_IP}/products`                 -    attach to the body's request the new product data and the jwt token to create a new product 
+>[POST] `{current_IP}/products`                 -    attach to the body's request new product's datas and an user's jwt token to create a new product 
 
 >[GET] `{current_IP}/products_by_category/car`  -    list all products of the 'car' category
 
@@ -124,7 +124,7 @@ A dashboard query allows him to get current orders by user
 
 >[GET] `{current_IP}/current_orders_per_user`                 -    get all current orders for user 5. A jwt token must be set in the header
 
->[PATCH] `{current_IP}/orders/4/products/2`                   -    attach to the body's request the product 2 in the order 4 with the updated quantity
+>[PATCH] `{current_IP}/orders/4/products/2`                   -    attach to the body's request the product 2 datas in the order 4 with the updated quantity
 
 
 ## Available Scripts
