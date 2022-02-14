@@ -64,6 +64,32 @@ CREATE DATABASE shopping_test;
 \c shopping_test
 GRANT ALL PRIVILEGES ON DATABASE shopping_test TO shopping_tester;**
 
+### Env variables
+
+POSTGRES_HOST=127.0.0.1
+POSTGRES_DB=postgres
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=cheese
+PORT=5000
+
+POSTGRES_HOST_DEV=127.0.0.1
+POSTGRES_DB_DEV=shopping_dev
+POSTGRES_USER_DEV=shopping_user
+POSTGRES_PASSWORD_DEV=cheeseball
+PORT_DEV=5000
+
+POSTGRES_HOST_TEST=127.0.0.1
+POSTGRES_DB_TEST=shopping_test
+POSTGRES_USER_TEST=shopping_tester
+POSTGRES_PASSWORD_TEST=cheesemaster
+PORT_TEST=5000
+
+ENV=dev
+
+BCRYPT_PASSWORD=lopolpolo_balabalabuluboulou
+SALT_ROUND=10
+TOKEN_SECRET=fashkjljkshuifwiue
+
 ## User actions
 
 A user can create an order and then add, remove, update, edit and delete products from this order.
