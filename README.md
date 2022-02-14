@@ -1,4 +1,4 @@
-# online storefront backend API
+# Online storefront backend API
 
 ## Table of contents
 
