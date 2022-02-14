@@ -18,7 +18,6 @@ if (ENV === 'test') {
         password: POSTGRES_PASSWORD_TEST,
         port: PORT_DEV,
     });
-    console.log(JSON.stringify(client));
 }
 if (ENV === 'dev') {
     client = new pg_1.Pool({

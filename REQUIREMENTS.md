@@ -5,7 +5,7 @@ These are the notes from a meeting with the frontend developer that describe wha
 
 ## API Endpoints
 #### Products
-- Index :                   'products/' [GET]
+- Index :                   '/products' [GET]
 - Show :                    '/products/:id' [GET]
 - Create [token required] : '/products' [POST]
 - Delete [token required] : '/products/:id' [DELETE]
@@ -41,7 +41,7 @@ These are the notes from a meeting with the frontend developer that describe wha
 -  id
 - name
 - price
-- [OPTIONAL] category
+- category
 
 CREATE TABLE products(
     id SERIAL PRIMARY KEY,

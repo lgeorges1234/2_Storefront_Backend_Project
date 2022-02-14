@@ -5,6 +5,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var OrderStates;
 (function (OrderStates) {
     OrderStates["ACTIVE"] = "active";
-    OrderStates["SOLVED"] = "complete";
+    OrderStates["COMPLETE"] = "complete";
 })(OrderStates || (OrderStates = {}));
 exports.default = OrderStates;

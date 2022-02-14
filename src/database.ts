@@ -29,7 +29,6 @@ if (ENV === 'test') {
     password: POSTGRES_PASSWORD_TEST,
     port: PORT_DEV as unknown as number,
   });
-  console.log(JSON.stringify(client));
 }
 
 if (ENV === 'dev') {
