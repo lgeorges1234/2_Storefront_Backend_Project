@@ -50,19 +50,25 @@ Project is created with:
 
 psql -h 127.0.0.1 -U postgres -p 5000
 
-**CREATE USER shopping_user WITH PASSWORD 'cheeseball';
+CREATE USER shopping_user WITH PASSWORD 'cheeseball';
+
 CREATE DATABASE shopping_dev;
+
 \c shopping_dev
-GRANT ALL PRIVILEGES ON DATABASE shopping_dev TO shopping_user;**
+
+GRANT ALL PRIVILEGES ON DATABASE shopping_dev TO shopping_user;
 
 ### Test database
 
 psql -h 127.0.0.1 -U postgres -p 5000
 
-**CREATE USER shopping_user WITH PASSWORD 'cheesemaster';
+CREATE USER shopping_user WITH PASSWORD 'cheesemaster';
+
 CREATE DATABASE shopping_test;
+
 \c shopping_test
-GRANT ALL PRIVILEGES ON DATABASE shopping_test TO shopping_tester;**
+
+GRANT ALL PRIVILEGES ON DATABASE shopping_test TO shopping_tester;
 
 ### Env variables
 

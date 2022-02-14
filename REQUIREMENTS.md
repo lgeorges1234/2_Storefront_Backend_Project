@@ -29,7 +29,7 @@ These are the notes from a meeting with the frontend developer that describe wha
 - Current Order by user (args: user id)[token required] 
                             '/current_orders_per_user' [GET]
 
-// order_products
+#### Order_products
 - IndexProduct              '/orders/products' [GET]
 - EditProduct               '/orders/:id/products' [GET]
 - AddProduct                '/orders/:id/products' [POST]
