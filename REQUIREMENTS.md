@@ -37,6 +37,26 @@ These are the notes from a meeting with the frontend developer that describe wha
 - RemoveProduct             '/orders/:id/products/:product_id' [DELETE]
 
 ## Data Shapes
+
+### Databases informations
+
+    "dev": {
+        "driver": "pg",
+        "host": "127.0.0.1",
+        "database": "shopping_dev",
+        "user": "shopping_user",
+        "password": "cheeseball",
+        "port": "5000"
+    },
+    "test": {
+        "driver": "pg",
+        "host": "127.0.0.1",
+        "database": "shopping_test",
+        "user": "shopping_tester",
+        "password": "cheesemaster",
+        "port": "5000"
+    }
+
 #### Product
 -  id
 - name
