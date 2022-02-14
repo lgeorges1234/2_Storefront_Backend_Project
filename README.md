@@ -51,9 +51,12 @@ Project is created with:
 psql -h 127.0.0.1 -U postgres -p 5000
 
 **CREATE USER shopping_user WITH PASSWORD 'cheeseball';
-CREATE DATABASE shopping_dev;
-\c shopping_dev
-GRANT ALL PRIVILEGES ON DATABASE shopping_dev TO shopping_user;**
+
+**CREATE DATABASE shopping_dev;**
+
+**\c shopping_dev**
+
+**GRANT ALL PRIVILEGES ON DATABASE shopping_dev TO shopping_user;**
 
 ### Test database
 
